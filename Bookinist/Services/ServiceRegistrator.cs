@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bookinist.ViewModels;
+namespace Bookinist.Services;
 
-class ViewModelLocator
+static class ServiceRegistrator
 {
-    public MainWindowViewModel MainWindow => App.Services.GetRequiredService<MainWindowViewModel>();
+    public static IServiceCollection AddServices(this IServiceCollection services) => services; 
 }
