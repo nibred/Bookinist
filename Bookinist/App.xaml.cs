@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -8,10 +10,31 @@ using System.Windows;
 
 namespace Bookinist
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private static IHost _host;
+
+        private static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureServices(ConfigureServices);
+        internal static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
+        {
+
+        }
+        public static IServiceProvider Services => MainHost.Services;
+        public static IHost MainHost => _host ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
+
+        protected override async void OnStartup(StartupEventArgs e)
+        {
+            var host = MainHost;
+            base.OnStartup(e);
+            await host.StartAsync();
+        }
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            using var host = MainHost;
+            base.OnExit(e);
+            await host.StopAsync();
+        }
     }
 }
