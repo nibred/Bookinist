@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Bookinist.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace Bookinist.Services;
 
 static class ServiceRegistrator
 {
-    public static IServiceCollection AddServices(this IServiceCollection services) => services; 
+    public static IServiceCollection AddServices(this IServiceCollection services) => services
+        .AddTransient<ISalesService, SalesService>()
+        ;
 }
