@@ -1,4 +1,5 @@
-﻿using Bookinist.DAL.Context;
+﻿using Bookinist.DAL;
+using Bookinist.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,5 +19,6 @@ static class DbRegistrator
             options.UseSqlite(configuration.GetConnectionString("SQLite"));
         })
         .AddTransient<DbInitializer>()
+        .AddRepositories()
         ;
 }

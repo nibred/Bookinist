@@ -1,4 +1,5 @@
 ﻿using Bookinist.DAL.Context;
+using Bookinist.DAL.Entities;
 using Bookinist.DAL.Entities.Base;
 using Bookinist.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bookinist.DAL;
 
-public class DbRepository<T> : IRepository<T> where T : Entity, new()
+internal class DbRepository<T> : IRepository<T> where T : Entity, new()
 {
     private readonly BookinistDB _db;
     private readonly DbSet<T> _dbSet;
@@ -19,7 +20,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
         _db = db;
         _dbSet = db.Set<T>();
     }
-    public IQueryable<T> Items => _dbSet;
+    public virtual IQueryable<T> Items => _dbSet;
 
     public T Add(T item)
     {
@@ -67,5 +68,24 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
         if (item == null) throw new ArgumentNullException(nameof(item));
         _db.Entry(item).State = EntityState.Modified;
         await _db.SaveChangesAsync();
+    }
+}
+
+class BookRepository : DbRepository<Book>
+{
+    public override IQueryable<Book> Items => base.Items.Include(i => i.Category);
+    public BookRepository(BookinistDB db) : base(db)
+    {
+    }
+}
+
+class DealRepository : DbRepository<Deal>
+{
+    public override IQueryable<Deal> Items => base.Items
+        .Include(i => i.Book)
+        .Include(i => i.Buyer)
+        .Include(i => i.Seller);
+    public DealRepository(BookinistDB db) : base(db)
+    {
     }
 }
