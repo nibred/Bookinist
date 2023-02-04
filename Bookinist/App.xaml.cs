@@ -33,6 +33,10 @@ namespace Bookinist
             var host = MainHost;
             base.OnStartup(e);
             await host.StartAsync();
+
+            using var scope = Services.CreateScope();
+            await scope.ServiceProvider.GetRequiredService<DbInitializer>().InitializeAsync();
+
         }
         protected override async void OnExit(ExitEventArgs e)
         {

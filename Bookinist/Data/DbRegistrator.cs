@@ -17,5 +17,6 @@ static class DbRegistrator
         {
             options.UseSqlite(configuration.GetConnectionString("SQLite"));
         })
+        .AddTransient<DbInitializer>()
         ;
 }
