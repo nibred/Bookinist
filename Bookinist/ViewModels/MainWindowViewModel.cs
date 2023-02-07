@@ -2,6 +2,7 @@
 using Bookinist.Infrastructure.Commands;
 using Bookinist.Interfaces;
 using Bookinist.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,25 +28,16 @@ class MainWindowViewModel : ViewModelBase
 
     private ICommand _showBooksViewCommand;
     public ICommand ShowBooksViewCommand => _showBooksViewCommand ??= new RelayCommand(OnShowBooksViewCommandExecuted);
+    private void OnShowBooksViewCommandExecuted(object obj) => CurrentVM = new BooksViewModel(_booksRepository);
 
-    private void OnShowBooksViewCommandExecuted(object obj)
-    {
-        CurrentVM = new BooksViewModel(_booksRepository);
-    }
     private ICommand _showBuyersViewCommand;
     public ICommand ShowBuyersViewCommand => _showBuyersViewCommand ??= new RelayCommand(OnShowBuyersViewCommandExecuted);
+    private void OnShowBuyersViewCommandExecuted(object obj) => CurrentVM = new BuyersViewModel(_buyerRepository);
 
-    private void OnShowBuyersViewCommandExecuted(object obj)
-    {
-        CurrentVM = new BuyersViewModel(_buyerRepository);
-    }
     private ICommand _showStatisticViewCommand;
     public ICommand ShowStatisticViewCommand => _showStatisticViewCommand ??= new RelayCommand(OnShowStatisticViewCommandExecuted);
-
-    private void OnShowStatisticViewCommandExecuted(object obj)
-    {
-        CurrentVM = new StatisticViewModel(_buyerRepository, _booksRepository, _dealsRepository);
-    }
+    //private void OnShowStatisticViewCommandExecuted(object obj) => CurrentVM = new StatisticViewModel(_buyerRepository, _booksRepository, _dealsRepository);
+    private void OnShowStatisticViewCommandExecuted(object obj) => CurrentVM = App.Services.GetRequiredService<StatisticViewModel>();
 
     public MainWindowViewModel(IRepository<Book> booksRepository, IRepository<Seller> sellersRepository, IRepository<Buyer> buyerRepository, IRepository<Deal> dealsRepository, ISalesService salesService)
     {
@@ -54,6 +46,9 @@ class MainWindowViewModel : ViewModelBase
         _buyerRepository = buyerRepository;
         _dealsRepository = dealsRepository;
         _salesService = salesService;
+
+        OnShowBooksViewCommandExecuted(null);
+
 
         //var bestsellers = _dealsRepository.Items.GroupBy(d => d.Book)
         //    .Select(deals => new { Book = deals.Key, Count = deals.Count() })
