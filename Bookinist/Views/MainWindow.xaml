@@ -6,9 +6,21 @@
     xmlns:local="clr-namespace:Bookinist"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Title}"
-    DataContext="{Binding MainWindow, Source={StaticResource Locator}}"
     Width="800"
     Height="450"
+    DataContext="{Binding MainWindow, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-    <Grid />
+    <DockPanel>
+        <Menu IsMainMenu="True">
+            <MenuItem Command="{Binding ShowBuyersViewCommand}" Header="Покупатели" />
+            <MenuItem Command="{Binding ShowBooksViewCommand}" Header="Книги" />
+            <MenuItem Command="{Binding ShowStatisticViewCommand}" Header="Статистика" />
+        </Menu>
+        <StatusBar>
+            <StatusBarItem Content="Status" />
+        </StatusBar>
+        <Grid>
+            <ContentControl Content="{Binding CurrentVM}" />
+        </Grid>
+    </DockPanel>
 </Window>
