@@ -49,7 +49,6 @@ class MainWindowViewModel : ViewModelBase
 
         OnShowBooksViewCommandExecuted(null);
 
-
         //var bestsellers = _dealsRepository.Items.GroupBy(d => d.Book)
         //    .Select(deals => new { Book = deals.Key, Count = deals.Count() })
         //    .OrderByDescending(book => book.Count)

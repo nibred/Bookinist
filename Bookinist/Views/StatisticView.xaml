@@ -5,32 +5,33 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Bookinist.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Bookinist.ViewModels"
+    d:DataContext="{d:DesignInstance {x:Type vm:StatisticViewModel}}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-            <ListBox
-                Width="150"
-                Height="298"
-                Margin="10"
-                ItemsSource="{Binding Bestsellers}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Key.Name, StringFormat='{}{0} - '}">
-                            <Run
-                                FontWeight="Bold"
-                                Foreground="DarkOrange"
-                                Text="{Binding Value, Mode=OneWay}" />
-                        </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Button
-                Width="150"
-                Padding="5"
-                Command="{Binding BestsellersCommand}"
-                Content="Загрузить данные" />
-        </StackPanel>
-    </Grid>
+    <TabControl>
+        <TabItem Header="Книги">
+            <GroupBox Header="Бестселлеры">
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding Bestsellers}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Name}"
+                            Header="Книги" />
+                        <DataGridTextColumn Binding="{Binding Count}" Header="Количество продаж" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </TabItem>
+        <TabItem Header="Категория">
+        </TabItem>
+        <TabItem Header="Покупатели" />
+        <TabItem Header="Продавцы" />
+    </TabControl>
 </UserControl>

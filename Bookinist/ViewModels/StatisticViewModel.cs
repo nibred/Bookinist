@@ -1,9 +1,11 @@
 ﻿using Bookinist.DAL.Entities;
 using Bookinist.Infrastructure.Commands;
 using Bookinist.Interfaces;
+using Bookinist.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,18 +19,21 @@ internal class StatisticViewModel : ViewModelBase
     private IRepository<Book> _booksRepository;
     private IRepository<Deal> _dealsRepository;
 
-    private Dictionary<Book, int> _bestsellers;
-    public Dictionary<Book, int> Bestsellers { get => _bestsellers; set => Set(ref _bestsellers, value); }
+    public ObservableCollection<Bestseller> Bestsellers { get; } = new();
 
     private ICommand _bestsellersCommand;
     public ICommand BestsellersCommand => _bestsellersCommand ??= new RelayCommandAsync(BestsellersCommandExecuteAsync);
     private async Task BestsellersCommandExecuteAsync()
     {
-        Bestsellers = _dealsRepository.Items.GroupBy(d => d.Book)
+        var bestsellers = await _dealsRepository.Items.GroupBy(d => d.Book)
             .Select(deals => new { Book = deals.Key, Count = deals.Count() })
             .OrderByDescending(book => book.Count)
             .Take(5)
-            .ToDictionary(k => k.Book, k => k.Count);
+            .Select(k => new Bestseller { Name = k.Book.Name, Count= k.Count })
+            .ToListAsync();
+
+        Bestsellers.Clear();
+        bestsellers.ForEach(i => Bestsellers.Add(i));
     }
 
     public StatisticViewModel(IRepository<Buyer> buyerRepository, IRepository<Book> booksRepository, IRepository<Deal> dealsRepository)
@@ -36,5 +41,7 @@ internal class StatisticViewModel : ViewModelBase
         _buyerRepository = buyerRepository;
         _booksRepository = booksRepository;
         _dealsRepository = dealsRepository;
+
+        BestsellersCommandExecuteAsync();
     }
 }
