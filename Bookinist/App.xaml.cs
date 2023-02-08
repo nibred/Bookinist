@@ -20,6 +20,9 @@ namespace Bookinist
         private static IHostBuilder CreateHostBuilder(string[] args) => Host
             .CreateDefaultBuilder(args)
             .ConfigureServices(ConfigureServices);
+
+        public static bool IsDesignTime { get; private set; } = true;
+
         public static IServiceProvider Services => MainHost.Services;
         public static IHost MainHost => _host ??= CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
@@ -30,6 +33,8 @@ namespace Bookinist
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            IsDesignTime = false;
+
             var host = MainHost;
             base.OnStartup(e);
             await host.StartAsync();
