@@ -17,6 +17,7 @@ static class DbRegistrator
         .AddDbContext<BookinistDB>(options =>
         {
             options.UseSqlite(configuration.GetConnectionString("SQLite"));
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         })
         .AddTransient<DbInitializer>()
         .AddRepositories()

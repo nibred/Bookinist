@@ -1,21 +1,35 @@
 ﻿using Bookinist.DAL.Entities;
+using Bookinist.Infrastructure.Commands;
 using Bookinist.Infrastructure.DebugService;
 using Bookinist.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace Bookinist.ViewModels;
 internal class BooksViewModel : ViewModelBase
 {
     private readonly IRepository<Book> _booksRepository;
     private readonly CollectionViewSource _booksViewSource;
+
+    private ObservableCollection<Book> _books;
+    public ObservableCollection<Book> Books
+    {
+        get => _books;
+        set
+        {
+            if (Set(ref _books, value))
+                _booksViewSource.Source = value;
+        }
+    }
     public ICollectionView BooksView => _booksViewSource.View;
-    public IEnumerable<Book> Books => _booksRepository.Items;
 
     private string _booksFilter;
     public string BooksFilter
@@ -27,23 +41,42 @@ internal class BooksViewModel : ViewModelBase
                 _booksViewSource.View.Refresh();
         }
     }
+
+    private Book _selectedBook;
+    public Book SelectedBook { get => _selectedBook; set => Set(ref _selectedBook, value); }
+
+    public ICommand LoadDataCommand => new RelayCommandAsync(LoadDataCommandExecuted);
+    private async Task LoadDataCommandExecuted()
+    {
+        Books = new ObservableCollection<Book>(await _booksRepository.Items.ToArrayAsync());
+    }
+    public ICommand AddBookCommand => new RelayCommandAsync(AddBookCommandExecuted);
+    private async Task AddBookCommandExecuted()
+    {
+
+    }
+    public ICommand RemoveBookCommand => new RelayCommandAsync(RemoveBookCommandExecuted, () => SelectedBook is not null);
+    private async Task RemoveBookCommandExecuted(object obj)
+    {
+        var book = obj as Book;
+        await _booksRepository.RemoveAsync(book.Id);
+        Books.Remove(book);
+        if (ReferenceEquals(SelectedBook, book))
+            SelectedBook = null;
+    }
+
     public BooksViewModel() : this(new DebugBookRepository())
     {
         if (!App.IsDesignTime) throw new InvalidOperationException("Constructor for design time only!");
+        _ = LoadDataCommandExecuted();
     }
 
     public BooksViewModel(IRepository<Book> booksRepository)
     {
         _booksRepository = booksRepository;
-        _booksViewSource = new CollectionViewSource
-        {
-            Source = Books,
-            SortDescriptions =
-            {
-                new SortDescription(nameof(Book.Name), ListSortDirection.Ascending)
-            }
-        };
+        _booksViewSource = new CollectionViewSource();
         _booksViewSource.Filter += OnBooksFilter;
+        _ = LoadDataCommandExecuted();
     }
 
     private void OnBooksFilter(object sender, FilterEventArgs e)

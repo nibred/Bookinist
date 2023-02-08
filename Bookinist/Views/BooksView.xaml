@@ -22,7 +22,24 @@
                     Margin="0,5"
                     DockPanel.Dock="Top"
                     Text="{Binding BooksFilter, UpdateSourceTrigger=PropertyChanged}" />
-                <ListBox MinWidth="150" ItemsSource="{Binding BooksView}">
+                <UniformGrid
+                    Margin="0,3"
+                    DockPanel.Dock="Bottom"
+                    Rows="1">
+                    <Button
+                        Margin="3"
+                        Command="{Binding AddBookCommand}"
+                        Content="Добавить" />
+                    <Button
+                        Margin="3"
+                        Command="{Binding RemoveBookCommand}"
+                        CommandParameter="{Binding SelectedBook}"
+                        Content="Удалить" />
+                </UniformGrid>
+                <ListBox
+                    MinWidth="150"
+                    ItemsSource="{Binding BooksView}"
+                    SelectedItem="{Binding SelectedBook}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" ToolTip="{Binding Category.Name}" />
