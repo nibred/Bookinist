@@ -17,13 +17,19 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <GroupBox Header="Книги">
-            <ListBox MinWidth="150" ItemsSource="{Binding Books}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Category.Name}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <DockPanel>
+                <TextBox
+                    Margin="0,5"
+                    DockPanel.Dock="Top"
+                    Text="{Binding BooksFilter, UpdateSourceTrigger=PropertyChanged}" />
+                <ListBox MinWidth="150" ItemsSource="{Binding BooksView}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" ToolTip="{Binding Category.Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
         </GroupBox>
     </Grid>
 </UserControl>
