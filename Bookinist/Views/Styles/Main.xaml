@@ -11,4 +11,16 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="DataGrid">
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="GridLinesVisibility" Value="Vertical" />
+        <Setter Property="VerticalGridLinesBrush" Value="Gray" />
+        <Setter Property="AlternatingRowBackground" Value="LightBlue" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+    </Style>
+
 </ResourceDictionary>

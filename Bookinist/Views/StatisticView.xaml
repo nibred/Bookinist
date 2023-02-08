@@ -13,12 +13,7 @@
     <TabControl>
         <TabItem Header="Книги">
             <GroupBox Header="Бестселлеры">
-                <DataGrid
-                    AutoGenerateColumns="False"
-                    CanUserAddRows="False"
-                    CanUserDeleteRows="False"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding Bestsellers}">
+                <DataGrid ItemsSource="{Binding Bestsellers}">
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="*"
@@ -29,8 +24,7 @@
                 </DataGrid>
             </GroupBox>
         </TabItem>
-        <TabItem Header="Категория">
-        </TabItem>
+        <TabItem Header="Категория" />
         <TabItem Header="Покупатели" />
         <TabItem Header="Продавцы" />
     </TabControl>
