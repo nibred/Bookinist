@@ -46,13 +46,15 @@ internal class DbRepository<T> : IRepository<T> where T : Entity, new()
 
     public void Remove(int id)
     {
-        _db.Remove(new T { Id = id });
+        var item = _dbSet.Local.FirstOrDefault(i => i.Id == id) ?? new T { Id = id };
+        _db.Remove(item);
         _db.SaveChanges();
     }
 
     public async Task RemoveAsync(int id, CancellationToken cancellationToken = default)
     {
-        _db.Remove(new T { Id = id });
+        var item = _dbSet.Local.FirstOrDefault(i => i.Id == id) ?? new T { Id = id };
+        _db.Remove(item);
         await _db.SaveChangesAsync();
     }
 
