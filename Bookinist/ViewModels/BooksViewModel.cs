@@ -2,6 +2,8 @@
 using Bookinist.Infrastructure.Commands;
 using Bookinist.Infrastructure.DebugService;
 using Bookinist.Interfaces;
+using Bookinist.Services;
+using Bookinist.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ namespace Bookinist.ViewModels;
 internal class BooksViewModel : ViewModelBase
 {
     private readonly IRepository<Book> _booksRepository;
+    private readonly IUserDialog _userDialog;
     private readonly CollectionViewSource _booksViewSource;
 
     private ObservableCollection<Book> _books;
@@ -53,6 +56,10 @@ internal class BooksViewModel : ViewModelBase
     public ICommand AddBookCommand => new RelayCommandAsync(AddBookCommandExecuted);
     private async Task AddBookCommandExecuted()
     {
+        var book = new Book();
+        book = _userDialog.Edit(book);
+        book.Category = new Category { Id = 1, Name = "fsdf" };
+        Books.Add(_booksRepository.Add(book));
 
     }
     public ICommand RemoveBookCommand => new RelayCommandAsync(RemoveBookCommandExecuted, () => SelectedBook is not null);
@@ -65,15 +72,16 @@ internal class BooksViewModel : ViewModelBase
             SelectedBook = null;
     }
 
-    public BooksViewModel() : this(new DebugBookRepository())
+    public BooksViewModel() : this(new DebugBookRepository(), new UserDialogService())
     {
         if (!App.IsDesignTime) throw new InvalidOperationException("Constructor for design time only!");
         _ = LoadDataCommandExecuted();
     }
 
-    public BooksViewModel(IRepository<Book> booksRepository)
+    public BooksViewModel(IRepository<Book> booksRepository, IUserDialog userDialog)
     {
         _booksRepository = booksRepository;
+        _userDialog = userDialog;
         _booksViewSource = new CollectionViewSource();
         _booksViewSource.Filter += OnBooksFilter;
         _ = LoadDataCommandExecuted();
