@@ -15,6 +15,7 @@ namespace Bookinist.ViewModels;
 class MainWindowViewModel : ViewModelBase
 {
     private readonly IRepository<Book> _booksRepository;
+    private readonly IRepository<Category> _categoryRepository;
     private readonly IRepository<Seller> _sellerRepository;
     private readonly IRepository<Buyer> _buyerRepository;
     private readonly IRepository<Deal> _dealsRepository;
@@ -26,16 +27,17 @@ class MainWindowViewModel : ViewModelBase
     private ViewModelBase _currentVM;
     public ViewModelBase CurrentVM { get => _currentVM; private set => Set(ref _currentVM, value); }
     public ICommand ShowBooksViewCommand => new RelayCommand(OnShowBooksViewCommandExecuted);
-    private void OnShowBooksViewCommandExecuted(object obj) => CurrentVM = new BooksViewModel(_booksRepository, _userDialog);
+    private void OnShowBooksViewCommandExecuted(object obj) => CurrentVM = new BooksViewModel(_booksRepository, _categoryRepository, _userDialog);
     public ICommand ShowBuyersViewCommand => new RelayCommand(OnShowBuyersViewCommandExecuted);
     private void OnShowBuyersViewCommandExecuted(object obj) => CurrentVM = new BuyersViewModel(_buyerRepository);
     public ICommand ShowStatisticViewCommand => new RelayCommand(OnShowStatisticViewCommandExecuted);
     //private void OnShowStatisticViewCommandExecuted(object obj) => CurrentVM = new StatisticViewModel(_buyerRepository, _booksRepository, _dealsRepository);
     private void OnShowStatisticViewCommandExecuted(object obj) => CurrentVM = App.Services.GetRequiredService<StatisticViewModel>();
 
-    public MainWindowViewModel(IRepository<Book> booksRepository, IRepository<Seller> sellersRepository, IRepository<Buyer> buyerRepository, IRepository<Deal> dealsRepository, ISalesService salesService, IUserDialog userDialog)
+    public MainWindowViewModel(IRepository<Book> booksRepository, IRepository<Category> categoryRepository, IRepository<Seller> sellersRepository, IRepository<Buyer> buyerRepository, IRepository<Deal> dealsRepository, ISalesService salesService, IUserDialog userDialog)
     {
         _booksRepository = booksRepository;
+        _categoryRepository = categoryRepository;
         _sellerRepository = sellersRepository;
         _buyerRepository = buyerRepository;
         _dealsRepository = dealsRepository;

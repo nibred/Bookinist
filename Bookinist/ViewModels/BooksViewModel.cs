@@ -19,6 +19,7 @@ namespace Bookinist.ViewModels;
 internal class BooksViewModel : ViewModelBase
 {
     private readonly IRepository<Book> _booksRepository;
+    private readonly IRepository<Category> _categoryRepository;
     private readonly IUserDialog _userDialog;
     private readonly CollectionViewSource _booksViewSource;
 
@@ -57,10 +58,15 @@ internal class BooksViewModel : ViewModelBase
     private async Task AddBookCommandExecuted()
     {
         var book = new Book();
-        book = _userDialog.Edit(book);
-        book.Category = new Category { Id = 1, Name = "fsdf" };
-        Books.Add(_booksRepository.Add(book));
-
+        if (SelectedBook is null)
+        {
+            book = _userDialog.Edit(book, _categoryRepository.Items.ToArray());
+            Books.Add(_booksRepository.Add(book));
+            return;
+        }
+        book = _userDialog.Edit(SelectedBook, _categoryRepository.Items.ToArray());
+        _booksRepository.Update(book);
+        _booksViewSource.View.Refresh();
     }
     public ICommand RemoveBookCommand => new RelayCommandAsync(RemoveBookCommandExecuted, () => SelectedBook is not null);
     private async Task RemoveBookCommandExecuted(object obj)
@@ -72,15 +78,16 @@ internal class BooksViewModel : ViewModelBase
             SelectedBook = null;
     }
 
-    public BooksViewModel() : this(new DebugBookRepository(), new UserDialogService())
-    {
-        if (!App.IsDesignTime) throw new InvalidOperationException("Constructor for design time only!");
-        _ = LoadDataCommandExecuted();
-    }
+    //public BooksViewModel() : this(new DebugBookRepository(), new DebugBookRepository(), new UserDialogService())
+    //{
+    //    if (!App.IsDesignTime) throw new InvalidOperationException("Constructor for design time only!");
+    //    _ = LoadDataCommandExecuted();
+    //}
 
-    public BooksViewModel(IRepository<Book> booksRepository, IUserDialog userDialog)
+    public BooksViewModel(IRepository<Book> booksRepository, IRepository<Category> categoryRepository, IUserDialog userDialog)
     {
         _booksRepository = booksRepository;
+        _categoryRepository = categoryRepository;
         _userDialog = userDialog;
         _booksViewSource = new CollectionViewSource();
         _booksViewSource.Filter += OnBooksFilter;

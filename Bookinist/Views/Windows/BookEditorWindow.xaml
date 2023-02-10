@@ -39,16 +39,32 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
-                    Grid.Row="1"
+                    Grid.Row="0"
                     Grid.Column="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
                     Text="Название:" />
                 <TextBox
-                    Grid.Row="1"
+                    Grid.Row="0"
                     Grid.Column="1"
                     Margin="5,0"
                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="Категория:" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5,5"
+                    DisplayMemberPath="Name"
+                    ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategory}" />
             </Grid>
         </UniformGrid>
     </DockPanel>

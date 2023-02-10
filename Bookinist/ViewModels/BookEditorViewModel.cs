@@ -14,6 +14,11 @@ internal class BookEditorViewModel : ViewModelBase
 {
     private string _name;
     public string Name { get => _name; set => Set(ref _name, value); }
+    private Category[] _categories;
+    public Category[] Categories { get => _categories; set => Set(ref _categories, value); }
+
+    private Category _selectedCategory;
+    public Category SelectedCategory { get => _selectedCategory; set => Set(ref _selectedCategory, value); }
 
     public int BookID { get; }
 
@@ -21,18 +26,17 @@ internal class BookEditorViewModel : ViewModelBase
 
     private void BookEditCommandExecuted(object obj)
     {
-        var book = obj as Book;
-        book.Name = Name;
     }
 
-    public BookEditorViewModel() : this(new Book { Id = 1, Name = "Тестовая книга" })
-    {
-        if (!App.IsDesignTime) throw new InvalidOperationException("Design time only!");
-    }
+    //public BookEditorViewModel() : this(new Book { Id = 1, Name = "Тестовая книга" })
+    //{
+    //    if (!App.IsDesignTime) throw new InvalidOperationException("Design time only!");
+    //}
 
-    public BookEditorViewModel(Book book)
+    public BookEditorViewModel(Book book, Category[] categories)
     {
         BookID = book.Id;
         Name = book.Name;
+        _categories = categories;
     }
 }

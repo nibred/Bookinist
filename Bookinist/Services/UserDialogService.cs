@@ -12,14 +12,15 @@ namespace Bookinist.Services;
 
 public class UserDialogService : IUserDialog
 {
-    public Book Edit(Book book)
+    public Book Edit(Book book, Category[] categories)
     {
-        var bookEditorVM = new BookEditorViewModel(book);
+        var bookEditorVM = new BookEditorViewModel(book, categories);
         var bookEditorWindow = new BookEditorWindow { DataContext = bookEditorVM };
 
         bookEditorWindow.ShowDialog();
 
         book.Name = bookEditorVM.Name;
+        book.Category = bookEditorVM.SelectedCategory;
 
         return book;
     }

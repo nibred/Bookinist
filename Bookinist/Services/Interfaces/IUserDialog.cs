@@ -9,5 +9,5 @@ namespace Bookinist.Services.Interfaces;
 
 internal interface IUserDialog
 {
-    Book Edit(Book book);
+    Book Edit(Book book, Category[] categories);
 }
