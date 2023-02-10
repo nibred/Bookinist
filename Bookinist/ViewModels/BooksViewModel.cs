@@ -34,6 +34,7 @@ internal class BooksViewModel : ViewModelBase
         }
     }
     public ICollectionView BooksView => _booksViewSource.View;
+    public string ButtonAddEdit => SelectedBook is null ? "Добавить" : "Редактир.";
 
     private string _booksFilter;
     public string BooksFilter
@@ -47,7 +48,15 @@ internal class BooksViewModel : ViewModelBase
     }
 
     private Book _selectedBook;
-    public Book SelectedBook { get => _selectedBook; set => Set(ref _selectedBook, value); }
+    public Book SelectedBook
+    {
+        get => _selectedBook;
+        set
+        {
+            Set(ref _selectedBook, value);
+            OnPropertyChanged(nameof(ButtonAddEdit));
+        }
+    }
 
     public ICommand LoadDataCommand => new RelayCommandAsync(LoadDataCommandExecuted);
     private async Task LoadDataCommandExecuted()
@@ -60,12 +69,12 @@ internal class BooksViewModel : ViewModelBase
         var book = new Book();
         if (SelectedBook is null)
         {
-            book = _userDialog.Edit(book, _categoryRepository.Items.ToArray());
+            if (!_userDialog.Edit(book, _categoryRepository.Items.ToArray())) return;
             Books.Add(_booksRepository.Add(book));
             return;
         }
-        book = _userDialog.Edit(SelectedBook, _categoryRepository.Items.ToArray());
-        _booksRepository.Update(book);
+        _userDialog.Edit(SelectedBook, _categoryRepository.Items.ToArray());
+        _booksRepository.Update(SelectedBook);
         _booksViewSource.View.Refresh();
     }
     public ICommand RemoveBookCommand => new RelayCommandAsync(RemoveBookCommandExecuted, () => SelectedBook is not null);

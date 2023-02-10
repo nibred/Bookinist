@@ -22,6 +22,7 @@ internal class DialogCommand : Command
     public override bool CanExecute(object parameter) => _canExecute?.Invoke(parameter) ?? true;
     public override void Execute(object parameter)
     {
-        Application.Current.Windows.OfType<Window>().FirstOrDefault(i => i.IsActive).Close();
+        var window = Application.Current.Windows.OfType<Window>().FirstOrDefault(i => i.IsActive);
+        window.Close();
     }
 }

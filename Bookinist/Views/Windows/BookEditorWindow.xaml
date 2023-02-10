@@ -10,21 +10,26 @@
     Width="400"
     Height="120"
     MinWidth="400"
-    MinHeight="120"
+    MinHeight="200"
     d:DataContext="{d:DesignInstance {x:Type vm:BookEditorViewModel},
                                      IsDesignTimeCreatable=True}"
     ResizeMode="NoResize"
     Topmost="True"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
+    WindowStyle="SingleBorderWindow"
     mc:Ignorable="d">
-    <DockPanel Margin="5" Background="#FFE2E2E2">
-        <TextBlock
-            HorizontalAlignment="Center"
-            DockPanel.Dock="Top"
-            Text="{Binding BookID, StringFormat=Книга ID:{0}}" />
+    <DockPanel Margin="5">
+        <TextBlock HorizontalAlignment="Center" DockPanel.Dock="Top">
+            <Run Text="{Binding BookID, Mode=OneWay, StringFormat=Книга ID:{0}}" />
+            <LineBreak />
+            <Run Text="{Binding SelectedCategory.Name, StringFormat={}Категория:{0}}" />
+        </TextBlock>
         <UniformGrid DockPanel.Dock="Bottom" Rows="1">
-            <Button Margin="3" Content="Отмена" />
+            <Button
+                Margin="3"
+                Command="{Binding EditBookCommand}"
+                CommandParameter="False"
+                Content="Отмена" />
             <Button
                 Margin="3"
                 Command="{Binding EditBookCommand}"

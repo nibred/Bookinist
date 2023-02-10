@@ -12,7 +12,7 @@ namespace Bookinist.Services;
 
 public class UserDialogService : IUserDialog
 {
-    public Book Edit(Book book, Category[] categories)
+    public bool Edit(Book book, Category[] categories)
     {
         var bookEditorVM = new BookEditorViewModel(book, categories);
         var bookEditorWindow = new BookEditorWindow { DataContext = bookEditorVM };
@@ -22,6 +22,6 @@ public class UserDialogService : IUserDialog
         book.Name = bookEditorVM.Name;
         book.Category = bookEditorVM.SelectedCategory;
 
-        return book;
+        return true;
     }
 }

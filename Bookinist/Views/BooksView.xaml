@@ -29,7 +29,7 @@
                     <Button
                         Margin="3"
                         Command="{Binding AddBookCommand}"
-                        Content="Добавить" />
+                        Content="{Binding ButtonAddEdit}" />
                     <Button
                         Margin="3"
                         Command="{Binding RemoveBookCommand}"
