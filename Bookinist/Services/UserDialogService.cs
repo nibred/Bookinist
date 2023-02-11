@@ -17,7 +17,8 @@ public class UserDialogService : IUserDialog
         var bookEditorVM = new BookEditorViewModel(book, categories);
         var bookEditorWindow = new BookEditorWindow { DataContext = bookEditorVM };
 
-        bookEditorWindow.ShowDialog();
+        if (bookEditorWindow.ShowDialog() != true)
+            return false;
 
         book.Name = bookEditorVM.Name;
         book.Category = bookEditorVM.SelectedCategory;

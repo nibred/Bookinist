@@ -23,6 +23,7 @@ internal class DialogCommand : Command
     public override void Execute(object parameter)
     {
         var window = Application.Current.Windows.OfType<Window>().FirstOrDefault(i => i.IsActive);
+        window.DialogResult = true;
         window.Close();
     }
 }

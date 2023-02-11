@@ -27,9 +27,9 @@
         <UniformGrid DockPanel.Dock="Bottom" Rows="1">
             <Button
                 Margin="3"
-                Command="{Binding EditBookCommand}"
                 CommandParameter="False"
-                Content="Отмена" />
+                Content="Отмена"
+                IsCancel="True" />
             <Button
                 Margin="3"
                 Command="{Binding EditBookCommand}"
@@ -67,7 +67,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="5,5"
-                    DisplayMemberPath="Name"
+                    DisplayMemberPath="Name" SelectedIndex="{Binding SelectedBookID, Mode=OneWay}"
                     ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory}" />
             </Grid>

@@ -22,8 +22,10 @@ internal class BookEditorViewModel : ViewModelBase
     public Category SelectedCategory { get => _selectedCategory; set => Set(ref _selectedCategory, value); }
 
     public int BookID { get; }
+    public int SelectedBookID { get; }
 
-    public ICommand EditBookCommand => new DialogCommand(BookEditCommandExecuted);
+    public ICommand EditBookCommand => new DialogCommand((o) => { }, 
+        (o) => !string.IsNullOrWhiteSpace(Name) && SelectedCategory is not null);
 
     private void BookEditCommandExecuted(object obj)
     {
@@ -38,6 +40,7 @@ internal class BookEditorViewModel : ViewModelBase
     {
         _categories = categories;
         SelectedCategory = book.Category;
+        SelectedBookID = categories.TakeWhile(c => c.Name != book.Category?.Name).Count();
         BookID = book.Id;
         Name = book.Name;
     }

@@ -73,7 +73,7 @@ internal class BooksViewModel : ViewModelBase
             Books.Add(_booksRepository.Add(book));
             return;
         }
-        _userDialog.Edit(SelectedBook, _categoryRepository.Items.ToArray());
+        if (!_userDialog.Edit(SelectedBook, _categoryRepository.Items.ToArray())) return;
         _booksRepository.Update(SelectedBook);
         _booksViewSource.View.Refresh();
     }
